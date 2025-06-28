@@ -1,0 +1,514 @@
+/*
+  variables for anime foliage greenhouse theme
+  lush leaves, green overlays, natural light
+*/
+:root
+{
+    --bg-color: #1a2e1a;
+    --text-color: #f5f5f5;
+    --accent-color: #39FF14;
+    --accent-hover: #32CD32;
+    --card-bg: rgba(34, 50, 34, 0.92);
+    --card-border: #39FF14;
+    --card-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+    /*
+      main background: anime-style foliage photo
+      overlays: soft green gradients for greenhouse effect
+    */
+    --greenhouse-pattern: 
+        url('/images/pedro-sousa-r_dyWeqxFu0-unsplash.jpg'),
+        linear-gradient(120deg, rgba(60,120,60,0.10) 60%, transparent 100%),
+        linear-gradient(90deg, rgba(80,180,80,0.08) 60%, transparent 100%);
+    --greenhouse-pattern-size: cover, 100vw 100vh, 100vw 100vh;
+    --greenhouse-pattern-position: center center, 0 0, 0 0;
+}
+
+/*
+  reset and base styles
+  remove default browser styles, set up box model for consistency
+*/
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+  base document styles
+  sets up brutalist background, overlays, and font
+*/
+body
+{
+    font-family: 'Rajdhani', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    /* anime foliage photo with green overlays */
+    background-image: var(--greenhouse-pattern);
+    background-size: var(--greenhouse-pattern-size);
+    background-position: var(--greenhouse-pattern-position);
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/*
+  soft green overlays for greenhouse light and depth
+*/
+body::before
+{
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background:
+        linear-gradient(120deg, rgba(80,200,120,0.10) 60%, transparent 100%),
+        radial-gradient(circle at 70% 20%, rgba(120,255,120,0.10) 0%, transparent 80%),
+        radial-gradient(circle at 20% 80%, rgba(80,200,120,0.08) 0%, transparent 80%);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.85;
+}
+
+/*
+  subtle green block for extra greenhouse depth
+*/
+body::after
+{
+    content: '';
+    position: fixed;
+    top: 10vh;
+    left: 8vw;
+    width: 75vw;
+    height: 70vh;
+    background:
+        linear-gradient(0deg, rgba(120,200,120,0.08) 80%, transparent 100%),
+        linear-gradient(90deg, rgba(60,120,60,0.08) 60%, transparent 100%);
+    box-shadow: 0 0 120px 10px rgba(80,180,80,0.10);
+    z-index: -2;
+    pointer-events: none;
+    border-radius: 18px;
+    border: 6px solid rgba(80,180,80,0.10);
+}
+
+/*
+  optional: noise overlay for extra texture
+
+body.noise::before
+{
+    background-image: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+    opacity: 0.10;
+}
+*/
+/*
+  layout container
+  max width and padding for main content
+*/
+.container
+{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/*
+  header styles
+  navigation bar with neon border and flex layout
+*/
+header
+{
+    background: var(--card-bg);
+    padding: 20px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*
+  site title in header
+  neon accent color, uppercase, spacing
+*/
+header h1
+{
+    color: var(--accent-color);
+    font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/*
+  navigation container
+  flex layout for nav links
+*/
+nav
+{
+    display: flex;
+    gap: 20px;
+}
+
+/*
+  navigation links
+  styled as buttons with hover and active effects
+*/
+nav a
+{
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover
+{
+    background: var(--accent-color);
+    color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+}
+
+nav a:active
+{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/*
+  posts grid
+  vertical stack, centered, max width
+*/
+.posts
+{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+    width: 90%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*
+  individual post card
+  neon border, background, hover effect
+*/
+.post-card
+{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease;
+    width: 90%;
+}
+
+.post-card:hover
+{
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(57, 255, 20, 0.3);
+}
+
+/*
+  post title in card
+  neon accent, uppercase, spacing
+*/
+.post-card h2
+{
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/*
+  post metadata
+  author, category, date, flex layout
+*/
+.post-meta
+{
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.post-author
+{
+    color: var(--accent-color);
+}
+
+.post-content
+{
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.post-actions
+{
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/*
+  button base styles
+  used for all buttons in app
+*/
+.btn
+{
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn.edit
+{
+    background: var(--accent-color);
+    color: var(--bg-color);
+}
+
+.btn.delete
+{
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+.btn:hover
+{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+}
+
+.btn:active
+{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/*
+  form container for post creation and editing
+  neon border, background, spacing
+*/
+.form-container
+{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: var(--card-shadow);
+}
+
+.form-container h2
+{
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.form-container .form-group
+{
+    margin-bottom: 15px;
+}
+
+.form-container label
+{
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.form-container input[type="text"],
+.form-container textarea
+{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    font-family: inherit;
+}
+
+.form-container textarea
+{
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-container .name-input-group
+{
+    display: flex;
+    gap: 10px;
+}
+
+.form-container .name-input-group input
+{
+    flex: 1;
+}
+
+.form-container .btn.random
+{
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.form-container .btn.random:hover
+{
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+}
+
+.form-container .btn.random:active
+{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.form-container .form-actions
+{
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-container .btn
+{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.form-container .btn.primary
+{
+    background: var(--accent-color);
+    color: var(--bg-color);
+}
+
+.form-container .btn.secondary
+{
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+.form-container .btn:hover
+{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
+}
+
+.form-container .btn:active
+{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.form-container select
+{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.category-filter
+{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-filter label
+{
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.category-filter select
+{
+    padding: 8px;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.post-category
+{
+    background: var(--accent-color);
+    color: var(--bg-color);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+/* ===== responsive design ===== */
+/* mobile and tablet styles */
+/* adjusts layout for smaller screens */
+@media (max-width: 768px)
+{
+    header
+    {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    nav
+    {
+        justify-content: center;
+    }
+
+    .posts
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .form-container .name-input-group
+    {
+        flex-direction: column;
+    }
+
+    .form-container .form-actions
+    {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,219 @@
+<!-- ===== main page ===== -->
+<!-- main container for the blog application -->
+<!-- includes header and footer partials -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- meta tags -->
+    <!-- sets character encoding and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- page title -->
+    <!-- displays the main application title -->
+    <title>BlogParty</title>
+    
+    <!-- stylesheet link -->
+    <!-- links to the main stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- include header partial -->
+    <!-- contains the main navigation -->
+    <%- include('partials/header') %>
+    
+    <!-- ===== main content container ===== -->
+    <!-- holds the post creation form and post list -->
+    <div class="container">
+        <!-- ===== post creation form ===== -->
+        <!-- form for creating new blog posts -->
+        <!-- includes author, title, and content fields -->
+        <div class="form-container">
+            <!-- form title -->
+            <!-- indicates this is a new post form -->
+            <h2>Create New Post</h2>
+            
+            <!-- new post form -->
+            <!-- uses post method for creation -->
+            <!-- includes all required fields -->
+            <form action="/posts" method="POST">
+                <!-- author input group -->
+                <!-- contains name input and random name button -->
+                <div class="form-group">
+                    <label for="author">Author Name</label>
+                    <div class="name-input-group">
+                        <input type="text" id="author" name="author" required>
+                        <button type="button" class="btn random" onclick="generateRandomName()">
+                            Generate Random Name
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- title input -->
+                <!-- for the post title -->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <!-- category dropdown -->
+                <!-- for selecting post category -->
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Education">Education</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <!-- content textarea -->
+                <!-- for the post content -->
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                
+                <!-- form actions -->
+                <!-- contains submit button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Create Post</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- category filter -->
+        <!-- allows filtering posts by category -->
+        <div class="category-filter">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" onchange="filterPosts(this.value)">
+                <option value="">All Categories</option>
+                <option value="Tech">Tech</option>
+                <option value="Lifestyle">Lifestyle</option>
+                <option value="Education">Education</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+        <!-- ===== posts grid ===== -->
+        <!-- displays all blog posts -->
+        <!-- shows empty state if no posts exist -->
+        <div class="posts">
+            <% 
+            if (posts.length === 0)
+            { 
+            %>
+                <!-- empty state message -->
+                <!-- shown when no posts exist -->
+                <div class="no-posts">
+                    <p>No posts yet. Start by creating one above!</p>
+                </div>
+            <% 
+            } 
+            else 
+            { 
+            %>
+                <!-- post cards -->
+                <!-- iterates through all posts -->
+                <!-- displays each post in a card -->
+                <% 
+                posts.forEach(post => 
+                { 
+                %>
+                    <!-- individual post card -->
+                    <!-- contains post metadata and content -->
+                    <article class="post-card">
+                        <!-- post title -->
+                        <!-- links to the post -->
+                        <h2><%= post.title %></h2>
+                        
+                        <!-- post metadata -->
+                        <!-- shows author and timestamps -->
+                        <div class="post-meta">
+                            <span class="post-author">By <%= post.author %></span>
+                            <span class="post-category"><%= post.category %></span>
+                            <span class="post-date"><%= post.createdAt %></span>
+                            <% 
+                            if (post.updatedAt) 
+                            { 
+                            %>
+                                <span class="post-updated">(Updated: <%= post.updatedAt %>)</span>
+                            <% 
+                            } 
+                            %>
+                        </div>
+                        
+                        <!-- post content -->
+                        <!-- displays the main post text -->
+                        <div class="post-content">
+                            <%= post.content %>
+                        </div>
+                        
+                        <!-- post actions -->
+                        <!-- contains edit and delete buttons -->
+                        <div class="post-actions">
+                            <!-- edit button -->
+                            <!-- links to the edit form -->
+                            <a href="/posts/<%= post.id %>/edit" class="btn edit">Edit</a>
+                            
+                            <!-- delete form -->
+                            <!-- uses delete method for removal -->
+                            <form action="/posts/<%= post.id %>?_method=DELETE" method="POST" class="delete-form">
+                                <button type="submit" class="btn delete">Delete</button>
+                            </form>
+                        </div>
+                    </article>
+                <% 
+                }); 
+                %>
+            <% 
+            } 
+            %>
+        </div>
+    </div>
+    
+    <!-- random name generator script -->
+    <!-- fetches a random name from the server -->
+    <!-- updates the author input field -->
+    <script>
+        async function generateRandomName()
+        {
+            try
+            {
+                const response = await fetch('/posts/generate-name');
+                const data = await response.json();
+                document.getElementById('author').value = data.name;
+            }
+            catch (error)
+            {
+                console.error('error generating name:', error);
+            }
+        }
+
+        // filter posts by category
+        // shows/hides posts based on selected category
+        function filterPosts(category)
+        {
+            const posts = document.querySelectorAll('.post-card');
+            posts.forEach(post => 
+            {
+                const postCategory = post.querySelector('.post-category').textContent;
+                if (!category || postCategory === category)
+                {
+                    post.style.display = 'block';
+                }
+                else
+                {
+                    post.style.display = 'none';
+                }
+            });
+        }
+    </script>
+    
+    <!-- include footer partial -->
+    <!-- contains copyright information -->
+    <%- include('partials/footer') %>
+</body>
+</html>

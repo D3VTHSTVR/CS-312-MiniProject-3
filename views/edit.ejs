@@ -1,0 +1,100 @@
+<!-- ===== edit post page ===== -->
+<!-- main container for the edit post form -->
+<!-- includes header and footer partials -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- meta tags -->
+    <!-- sets character encoding and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- page title -->
+    <!-- displays the title of the post being edited -->
+    <title>Edit Post - <%= post.title %></title>
+    
+    <!-- stylesheet link -->
+    <!-- links to the main stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- include header partial -->
+    <!-- contains the main navigation -->
+    <%- include('partials/header') %>
+    
+    <!-- ===== edit form container ===== -->
+    <!-- main form for editing posts -->
+    <!-- pre-fills with existing post data -->
+    <div class="form-container">
+        <!-- form title -->
+        <!-- indicates this is an edit form -->
+        <h2>Edit Post</h2>
+        
+        <!-- edit form -->
+        <!-- uses put method for updating -->
+        <!-- includes all post fields -->
+        <form action="/posts/<%= post.id %>?_method=PUT" method="POST">
+            <!-- author input group -->
+            <!-- contains name input and random name button -->
+            <div class="form-group">
+                <label for="author">Author Name</label>
+                <div class="name-input-group">
+                    <input type="text" id="author" name="author" value="<%= post.author %>" required>
+                    <button type="button" class="btn random" onclick="generateRandomName()">Generate Random Name</button>
+                </div>
+            </div>
+            
+            <!-- title input -->
+            <!-- for the post title -->
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="<%= post.title %>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Tech" <%= post.category === 'Tech' ? 'selected' : '' %>>Tech</option>
+                    <option value="Lifestyle" <%= post.category === 'Lifestyle' ? 'selected' : '' %>>Lifestyle</option>
+                    <option value="Education" <%= post.category === 'Education' ? 'selected' : '' %>>Education</option>
+                    <option value="Other" <%= post.category === 'Other' ? 'selected' : '' %>>Other</option>
+                </select>
+            </div>
+            
+            <!-- content textarea -->
+            <!-- for the post content -->
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" required><%= post.content %></textarea>
+            </div>
+            
+            <!-- form actions -->
+            <!-- contains submit and cancel buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn primary">Update Post</button>
+                <a href="/" class="btn secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- random name generator script -->
+    <!-- fetches a random name from the server -->
+    <!-- updates the author input field -->
+    <script>
+        async function generateRandomName() {
+            try {
+                const response = await fetch('/posts/generate-name');
+                const data = await response.json();
+                document.getElementById('author').value = data.name;
+            } catch (error) {
+                console.error('error generating name:', error);
+            }
+        }
+    </script>
+    
+    <!-- include footer partial -->
+    <!-- contains copyright information -->
+    <%- include('partials/footer') %>
+</body>
+</html>
