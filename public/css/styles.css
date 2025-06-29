@@ -1,6 +1,6 @@
 /*
-  variables for anime foliage greenhouse theme
-  lush leaves, green overlays, natural light
+  css variables for theming
+  defines color scheme and reusable values
 */
 :root
 {
@@ -11,16 +11,10 @@
     --card-bg: rgba(34, 50, 34, 0.92);
     --card-border: #39FF14;
     --card-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-    /*
-      main background: anime-style foliage photo
-      overlays: soft green gradients for greenhouse effect
-    */
-    --greenhouse-pattern: 
-        url('/images/pedro-sousa-r_dyWeqxFu0-unsplash.jpg'),
-        linear-gradient(120deg, rgba(60,120,60,0.10) 60%, transparent 100%),
-        linear-gradient(90deg, rgba(80,180,80,0.08) 60%, transparent 100%);
-    --greenhouse-pattern-size: cover, 100vw 100vh, 100vw 100vh;
-    --greenhouse-pattern-position: center center, 0 0, 0 0;
+    --sidebar-bg: rgba(52, 58, 64, 0.95);
+    --sidebar-border: #198754;
+    --post-bg: rgba(52, 58, 64, 0.95);
+    --post-border: rgba(13, 110, 253, 0.3);
 }
 
 /*
@@ -36,479 +30,227 @@
 
 /*
   base document styles
-  sets up brutalist background, overlays, and font
+  sets up dark background and font
 */
 body
 {
     font-family: 'Rajdhani', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: #212529;
+    color: #f8f9fa;
     line-height: 1.6;
-    /* anime foliage photo with green overlays */
-    background-image: var(--greenhouse-pattern);
-    background-size: var(--greenhouse-pattern-size);
-    background-position: var(--greenhouse-pattern-position);
-    background-repeat: no-repeat;
-    position: relative;
 }
 
 /*
-  soft green overlays for greenhouse light and depth
-*/
-body::before
-{
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background:
-        linear-gradient(120deg, rgba(80,200,120,0.10) 60%, transparent 100%),
-        radial-gradient(circle at 70% 20%, rgba(120,255,120,0.10) 0%, transparent 80%),
-        radial-gradient(circle at 20% 80%, rgba(80,200,120,0.08) 0%, transparent 80%);
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0.85;
-}
-
-/*
-  subtle green block for extra greenhouse depth
-*/
-body::after
-{
-    content: '';
-    position: fixed;
-    top: 10vh;
-    left: 8vw;
-    width: 75vw;
-    height: 70vh;
-    background:
-        linear-gradient(0deg, rgba(120,200,120,0.08) 80%, transparent 100%),
-        linear-gradient(90deg, rgba(60,120,60,0.08) 60%, transparent 100%);
-    box-shadow: 0 0 120px 10px rgba(80,180,80,0.10);
-    z-index: -2;
-    pointer-events: none;
-    border-radius: 18px;
-    border: 6px solid rgba(80,180,80,0.10);
-}
-
-/*
-  optional: noise overlay for extra texture
-
-body.noise::before
-{
-    background-image: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
-    opacity: 0.10;
-}
-*/
-/*
-  layout container
-  max width and padding for main content
-*/
-.container
-{
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/*
-  header styles
-  navigation bar with neon border and flex layout
-*/
-header
-{
-    background: var(--card-bg);
-    padding: 20px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--card-border);
-    box-shadow: var(--card-shadow);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/*
-  site title in header
-  neon accent color, uppercase, spacing
-*/
-header h1
-{
-    color: var(--accent-color);
-    font-size: 2em;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-/*
-  navigation container
-  flex layout for nav links
-*/
-nav
-{
-    display: flex;
-    gap: 20px;
-}
-
-/*
-  navigation links
-  styled as buttons with hover and active effects
-*/
-nav a
-{
-    color: var(--text-color);
-    text-decoration: none;
-    padding: 10px 20px;
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-nav a:hover
-{
-    background: var(--accent-color);
-    color: var(--bg-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
-}
-
-nav a:active
-{
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-/*
-  posts grid
-  vertical stack, centered, max width
-*/
-.posts
-{
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    margin-top: 30px;
-    width: 90%;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/*
-  individual post card
-  neon border, background, hover effect
+  post card styling
+  custom styling for the post card container used in filtering
 */
 .post-card
 {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: var(--card-shadow);
     transition: all 0.3s ease;
-    width: 90%;
 }
 
+/*
+  post card hover state
+  lift effect with enhanced shadow
+*/
 .post-card:hover
 {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(57, 255, 20, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
 /*
-  post title in card
-  neon accent, uppercase, spacing
+  custom styles to complement bootstrap
+  smooth transitions for interactive elements
 */
-.post-card h2
-{
-    color: var(--accent-color);
-    margin-bottom: 15px;
-    font-size: 1.5em;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.btn, .card, .form-control, .form-select {
+    transition: all 0.2s ease-in-out;
 }
 
 /*
-  post metadata
-  author, category, date, flex layout
+  enhanced card hover effects
+  lift effect with enhanced shadow
 */
-.post-meta
-{
-    font-size: 0.9em;
-    color: #888;
-    margin-bottom: 15px;
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.post-author
-{
-    color: var(--accent-color);
-}
-
-.post-content
-{
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.post-actions
-{
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/*
-  button base styles
-  used for all buttons in app
-*/
-.btn
-{
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn.edit
-{
-    background: var(--accent-color);
-    color: var(--bg-color);
-}
-
-.btn.delete
-{
-    background: transparent;
-    border: 1px solid var(--accent-color);
-    color: var(--accent-color);
-}
-
-.btn:hover
-{
+.card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
-}
-
-.btn:active
-{
-    transform: translateY(0);
-    box-shadow: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.25) !important;
 }
 
 /*
-  form container for post creation and editing
-  neon border, background, spacing
+  form control focus states
+  accent border color and glow effect
 */
-.form-container
-{
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 30px;
-    box-shadow: var(--card-shadow);
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-.form-container h2
-{
-    color: var(--accent-color);
-    margin-bottom: 20px;
-    font-size: 1.5em;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+/*
+  button hover effects
+  subtle lift animation
+*/
+.btn:hover {
+    transform: translateY(-1px);
 }
 
-.form-container .form-group
-{
-    margin-bottom: 15px;
+/*
+  badge styling
+  smaller font size and padding
+*/
+.badge {
+    font-size: 0.75em;
+    padding: 0.35em 0.65em;
 }
 
-.form-container label
-{
-    display: block;
-    margin-bottom: 5px;
+/*
+  post card styling
+  enhanced background with better contrast and border
+*/
+.post-card .card {
+    background: var(--post-bg);
+    border: 1px solid var(--post-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/*
+  post card header styling
+  subtle accent background and border
+*/
+.post-card .card-header {
+    background: rgba(13, 110, 253, 0.1);
+    border-bottom: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+/*
+  sidebar card styling
+  vibrant green background with better contrast
+*/
+.bg-secondary.bg-opacity-75 {
+    background-color: var(--sidebar-bg) !important;
+    border-color: var(--sidebar-border) !important;
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+}
+
+/*
+  sidebar card header styling
+  enhanced green header
+*/
+.bg-success {
+    background-color: #198754 !important;
+    border-bottom: 2px solid #146c43;
+}
+
+/*
+  post meta badge styling
+  subtle accent background
+*/
+.post-meta .badge {
+    background: rgba(13, 110, 253, 0.2);
     color: var(--text-color);
-    font-weight: bold;
 }
 
-.form-container input[type="text"],
-.form-container textarea
-{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.5);
-    color: var(--text-color);
-    font-family: inherit;
-}
-
-.form-container textarea
-{
-    min-height: 100px;
-    resize: vertical;
-}
-
-.form-container .name-input-group
-{
-    display: flex;
-    gap: 10px;
-}
-
-.form-container .name-input-group input
-{
-    flex: 1;
-}
-
-.form-container .btn.random
-{
-    background: var(--accent-color);
-    color: var(--bg-color);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.form-container .btn.random:hover
-{
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
-}
-
-.form-container .btn.random:active
-{
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-.form-container .form-actions
-{
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.form-container .btn
-{
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.form-container .btn.primary
-{
-    background: var(--accent-color);
-    color: var(--bg-color);
-}
-
-.form-container .btn.secondary
-{
-    background: transparent;
-    border: 1px solid var(--accent-color);
-    color: var(--accent-color);
-}
-
-.form-container .btn:hover
-{
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(57, 255, 20, 0.3);
-}
-
-.form-container .btn:active
-{
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-.form-container select
-{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.5);
-    color: var(--text-color);
-    font-family: inherit;
-    cursor: pointer;
-}
-
-.category-filter
-{
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.category-filter label
-{
-    color: var(--text-color);
-    font-weight: bold;
-}
-
-.category-filter select
-{
-    padding: 8px;
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.5);
-    color: var(--text-color);
-    cursor: pointer;
-}
-
-.post-category
-{
-    background: var(--accent-color);
-    color: var(--bg-color);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: bold;
-}
-
-/* ===== responsive design ===== */
-/* mobile and tablet styles */
-/* adjusts layout for smaller screens */
-@media (max-width: 768px)
-{
-    header
-    {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
+/*
+  responsive design for mobile
+  adjusts text sizes for smaller screens
+*/
+@media (max-width: 768px) {
+    /*
+      mobile navbar brand
+      smaller font size
+    */
+    .navbar-brand {
+        font-size: 1.5rem;
     }
 
-    nav
-    {
-        justify-content: center;
+    /*
+      mobile card title
+      smaller font size for better fit
+    */
+    .card-title {
+        font-size: 1.1rem;
+    }
+}
+
+/*
+  fade in animation
+  smooth entrance effect for post cards
+*/
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*
+  post card animation
+  applies fade in effect to new posts
+*/
+.post-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/*
+  form control styling
+  dark background with accent border
+*/
+.form-control, .form-select {
+    background: rgba(33, 37, 41, 0.9);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+    color: var(--text-color);
+}
+
+/*
+  form control placeholder text
+  semi-transparent light color
+*/
+.form-control::placeholder {
+    color: rgba(248, 249, 250, 0.6);
+}
+
+/*
+  form select option styling
+  dark background with light text
+*/
+.form-select option {
+    background: rgba(33, 37, 41, 0.9);
+    color: var(--text-color);
+}
+
+/*
+  card styling
+  enhanced background with better contrast
+*/
+.card {
+    background: var(--post-bg);
+    border: 1px solid var(--post-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/*
+  print styles
+  hides interactive elements and adjusts colors for printing
+*/
+@media print {
+    /*
+      hide buttons, navbar, and footer when printing
+    */
+    .btn, .navbar, .footer {
+        display: none !important;
     }
 
-    .posts
-    {
-        grid-template-columns: 1fr;
-    }
-
-    .form-container .name-input-group
-    {
-        flex-direction: column;
-    }
-
-    .form-container .form-actions
-    {
-        flex-direction: column;
+    /*
+      print card styling
+      white background with black text and border
+    */
+    .card {
+        border: 1px solid #000;
+        box-shadow: none;
+        background: white;
+        color: black;
     }
 }

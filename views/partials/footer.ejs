@@ -1,12 +1,16 @@
     </main>
-    <!-- ===== footer section ===== -->
-    <!-- main footer container -->
-    <!-- contains copyright information and current year -->
-    <!-- uses a semi-transparent background with neon border -->
-    <footer>
-        <!-- copyright text -->
-        <!-- displays the current year dynamically -->
-        <p>&copy; <%= new Date().getFullYear() %> BlogParty. All rights reserved.</p>
+    <!-- footer section - main footer container - contains copyright information and current year -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <!-- footer content container - centers the footer content -->
+        <div class="container text-center">
+            <!-- copyright text - displays the current year dynamically -->
+            <p class="mb-0">
+                <!-- copyright icon - bootstrap icon for copyright symbol -->
+                <i class="bi bi-c-circle me-1"></i>
+                <!-- dynamic year - uses javascript to get current year -->
+                <%= new Date().getFullYear() %> BlogParty. All rights reserved.
+            </p>
+        </div>
     </footer>
 </body>
 </html>
