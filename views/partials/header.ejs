@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- meta charset - sets character encoding for the document -->
     <meta charset="UTF-8">
+    <!-- viewport meta - ensures responsive design on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- page title - displays in browser tab and bookmarks -->
     <title>BlogParty</title>
+    <!-- custom stylesheet - links to the main css file -->
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <!-- ===== header section ===== -->
-    <!-- main navigation header -->
-    <!-- contains site title and navigation links -->
-    <!-- uses a semi-transparent background with neon border -->
-    <header>
-        <!-- site title -->
-        <!-- displays the main heading of the application -->
-        <h1>BlogParty</h1>
-        
-        <!-- navigation container -->
-        <!-- holds the main navigation links -->
-        <nav>
-            <!-- feed link -->
-            <!-- links to the main page showing all posts -->
-            <a href="/">Feed</a>
-        </nav>
+    <!-- header section - main navigation header - contains site title and navigation links -->
+    <header class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <!-- header content container - centers and constrains the header content -->
+        <div class="container">
+            <!-- site title - displays the main heading of the application -->
+            <a class="navbar-brand fw-bold fs-3 text-white" href="/">
+                <!-- brand icon - bootstrap icon for journal/rich text -->
+                <i class="bi bi-journal-richtext me-2 text-white"></i>
+                <!-- brand text - application name -->
+                BlogParty
+            </a>
+            
+            <!-- navigation container - holds the main navigation links -->
+            <nav class="navbar-nav ms-auto">
+                <!-- feed link - links to the main page showing all posts -->
+                <a class="nav-link text-white" href="/">
+                    <!-- home icon - bootstrap icon for house/home -->
+                    <i class="bi bi-house me-1"></i>
+                    <!-- link text - descriptive text for the navigation -->
+                    Feed
+                </a>
+            </nav>
+        </div>
     </header>
+    <!-- main content container - holds the primary content of the page -->
     <main>
