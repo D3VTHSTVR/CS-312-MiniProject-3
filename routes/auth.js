@@ -6,7 +6,7 @@
 const express = require('express');
 const router = express.Router();
 const md5 = require('md5');
-const db = require('../db'); // Adjust path if needed
+const db = require('../db'); 
 
 /*
   route handlers:
@@ -39,12 +39,13 @@ router.post('/signup', async (req, res) => {
                 error: 'User ID already taken. Please choose a different one.' 
             });
         }
-        // Hash the password with md5
+        // hash the password with md5
         const hashedPassword = md5(password);
-        // Insert new user into the database (unique_id is auto-generated)
+        // insert new user into the database (unique_id is auto-generated)
         await db.query('INSERT INTO users (user_id, password, name) VALUES ($1, $2, $3)', [user_id, hashedPassword, name]);
         res.redirect('/auth/signin');
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('signup error:', error);
         res.render('signup', { 
             error: 'Error creating account. Please try again.' 
@@ -83,12 +84,13 @@ router.post('/signin', async (req, res) => {
         // create session for authenticated user (store unique_id and name)
         req.session.user = {
             unique_id: user.unique_id,
-            user_id: user.user_id, // plain
+            user_id: user.user_id, 
             name: user.name
         };
         console.log('user signed in:', user.unique_id);
         res.redirect('/posts');
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('signin error:', error);
         res.render('signin', { 
             error: 'Error signing in. Please try again.' 
@@ -109,7 +111,7 @@ router.get('/logout', (req, res) => {
     });
 });
 
-// Middleware to require authentication
+// middleware to require authentication
 function requireAuth(req, res, next) {
     if (!req.session.user) {
         return res.redirect('/auth/signin');
@@ -117,28 +119,28 @@ function requireAuth(req, res, next) {
     next();
 }
 
-// Account page (GET)
+// account page (GET)
 router.get('/account', requireAuth, async (req, res) => {
     res.render('account', { user: req.session.user, error: null, success: null });
 });
 
-// Account update (POST)
+// account update (POST)
 router.post('/account', requireAuth, async (req, res) => {
     try {
         const { new_user_id, new_password } = req.body;
         const current_unique_id = req.session.user.unique_id;
-        // Check if new_user_id is taken (plain text, and not the current user's own user_id)
+        // check if new_user_id is taken (plain text, and not the current user's own user_id)
         const existingUser = await db.query('SELECT * FROM users WHERE user_id = $1 AND unique_id != $2', [new_user_id, current_unique_id]);
         if (existingUser.rows.length > 0) {
             return res.render('account', { user: req.session.user, error: 'User ID already taken.', success: null });
         }
-        // Hash new password
+        // hash new password
         const hashedPassword = md5(new_password);
-        // Update user in DB using unique_id
+        // update user in db using unique_id
         await db.query('UPDATE users SET user_id = $1, password = $2 WHERE unique_id = $3', [new_user_id, hashedPassword, current_unique_id]);
-        // Update blogs to use new user_id
+        // update blogs to use new user_id
         await db.query('UPDATE blogs SET creator_user_id = $1 WHERE creator_user_id = $2', [new_user_id, req.session.user.user_id]);
-        // Update session
+        // update session
         req.session.user.user_id = new_user_id;
         res.render('account', { user: req.session.user, error: null, success: 'Account updated successfully.' });
     } catch (error) {

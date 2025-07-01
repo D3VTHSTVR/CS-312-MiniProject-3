@@ -3,11 +3,15 @@ const { Pool } = require('pg');
 
 // create a new pool instance to manage database connections
 const pool = new Pool({
-  user: 'postgres',       // Your PostgreSQL username
+  // postgresql username
+  user: 'postgres',       
   host: 'localhost',
-  database: 'BlogDB',     // Your database name
-  password: 'beans',      // Your PostgreSQL password (fix the missing quote)
-  port: 5432              // Default PostgreSQL port
+   // database name
+  database: 'BlogDB',    
+  // postgresql password 
+  password: 'beans',      
+  // default postgresql port
+  port: 5432              
 });
 
 // export the pool so it can be used in other files

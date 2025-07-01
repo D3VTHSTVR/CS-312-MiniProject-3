@@ -84,12 +84,12 @@ router.put('/:id', requireAuth, async (req, res) =>
     try {
         const { title, content, category } = req.body;
         const postId = req.params.id;
-        // Check ownership
+        // check ownership
         const postResult = await db.query('SELECT * FROM blogs WHERE blog_id = $1', [postId]);
         const post = postResult.rows[0];
         if (!post) return res.status(404).send('Post not found');
         if (post.creator_user_id !== req.session.user.user_id) return res.status(403).send('You can only edit your own posts');
-        // Update in DB
+        // update in db
         await db.query(
             'UPDATE blogs SET title = $1, body = $2, category = $3 WHERE blog_id = $4',
             [title, content, category, postId]
