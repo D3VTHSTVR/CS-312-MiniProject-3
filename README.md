@@ -1,27 +1,54 @@
-# CS-312 MiniProject 1
+# CS-312 MiniProject 3
 
-A modern blog platform built with Node.js, Express, and EJS with Bootstrap styling.
+A modern blog platform built with Node.js, Express, EJS, and PostgreSQL, styled with Bootstrap.
 
 ## Features
-- Create, edit, and delete blog posts
-- Random author name generator
+- User signup, signin, and logout
+- Account management (change user ID and password)
+- Create, edit, and delete your own blog posts
 - Category selection and filtering
-- Modal-based post editing
-- Bootstrap-powered responsive design
-- Dark theme with green accents
-- Comprehensive code documentation
+- Responsive, modern UI with Bootstrap and custom CSS
+- Secure password storage (MD5 for demo purposes)
+- Only post owners can edit or delete their posts
 
 ## Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v16 or higher recommended)
 - [npm](https://www.npmjs.com/)
+- [PostgreSQL](https://www.postgresql.org/) (local or remote)
+
+### Database Setup
+1. Create a database named `BlogDB` in PostgreSQL:
+   ```sh
+   createdb BlogDB
+   ```
+2. Create the required tables:
+   ```sql
+   CREATE TABLE users (
+     unique_id SERIAL PRIMARY KEY,
+     user_id VARCHAR(255) UNIQUE NOT NULL,
+     password VARCHAR(255) NOT NULL,
+     name VARCHAR(255) NOT NULL
+   );
+
+   CREATE TABLE blogs (
+     blog_id SERIAL PRIMARY KEY,
+     creator_user_id VARCHAR(255) REFERENCES users(user_id),
+     creator_name VARCHAR(255) NOT NULL,
+     title VARCHAR(255) NOT NULL,
+     body TEXT NOT NULL,
+     category VARCHAR(100) NOT NULL,
+     date_created TIMESTAMP DEFAULT now()
+   );
+   ```
+3. Update `db.js` with your PostgreSQL username and password if needed.
 
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/D3VTHSTVR/CS-312-MiniProject-1.git
-   cd CS-312-MiniProject-1
+   git clone <your-repo-url>
+   cd <your-project-folder>
    ```
 2. Install dependencies:
    ```sh
@@ -37,70 +64,69 @@ Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
 ```
-CS-312-MiniProject-1/
+MiniProject3/
 ├── public/
 │   ├── css/
-│   │   └── styles.css         # Main styles
-│   └── images/                # Background and UI images
+│   │   └── styles.css
+│   └── images/
 ├── routes/
-│   └── posts.js               # Blog post routes and logic
+│   ├── auth.js
+│   └── posts.js
 ├── views/
-│   ├── index.ejs              # Main page with sidebar form and modal editing
+│   ├── account.ejs
+│   ├── index.ejs
+│   ├── signin.ejs
+│   ├── signup.ejs
 │   └── partials/
-│       ├── header.ejs         # Header partial
-│       └── footer.ejs         # Footer partial
-├── package.json               # Project metadata and dependencies
-├── package-lock.json          # Exact dependency versions
-├── app.js                     # Main Express app
-├── .gitignore                 # Files and folders ignored by git
-└── README.md                  # Project documentation
+│       ├── header.ejs
+│       └── footer.ejs
+├── db.js
+├── app.js
+├── package.json
+├── package-lock.json
+└── README.md
 ```
 
 ## Usage
-- **Create a post:** Fill out the form in the sidebar on the main page
-- **Generate a random author name:** Click the shuffle button next to the author field
-- **Filter by category:** Use the dropdown above the posts section
-- **Edit posts:** Click the "Edit" button on any post to open the edit modal
-- **Delete posts:** Click the "Delete" button and confirm the action
+- Sign up for a new account on the signup page
+- Sign in with your user ID and password
+- Create a post using the form on the main page
+- Filter posts by category using the dropdown
+- Edit or delete your own posts using the buttons on each post
+- Update your user ID or password on the account page
+- Log out using the header menu
 
 ## Technical Details
 
 ### Architecture
-- **Backend:** Node.js with Express.js framework
-- **Frontend:** EJS templating with Bootstrap 5
-- **Styling:** Custom CSS variables with Bootstrap enhancement
-- **Data Storage:** In-memory array (temporary storage)
-- **JavaScript:** Vanilla JS with async/await for API calls
+- Backend: Node.js with Express.js
+- Frontend: EJS templating with Bootstrap 5
+- Styling: Custom CSS variables with Bootstrap
+- Data Storage: PostgreSQL database
+- Authentication: Session-based with express-session
+- Password Hashing: MD5 (for demo; use bcrypt in production)
 
 ### Code Quality
-- **Comprehensive commenting:** All files heavily commented with lowercase comments
-- **No inline comments:** All comments on separate lines above code
-- **Clean codebase:** Removed unused CSS classes and routes
-- **Consistent styling:** Bootstrap-first approach with custom enhancements
-
-### Key Features
-- **Modal-based editing:** No separate edit page needed
-- **Responsive design:** Works on desktop, tablet, and mobile
-- **Category filtering:** Client-side filtering with JavaScript
-- **Random name generation:** API endpoint for generating silly names
-- **Form validation:** HTML5 validation with required fields
+- All files are clearly commented with lowercase comments above code
+- No inline comments
+- Clean, modern, and responsive codebase
+- Consistent styling with Bootstrap and custom enhancements
 
 ## Customization
-- **Styling:** Modify CSS variables in `public/css/styles.css`
-- **Categories:** Add new categories in the form dropdowns
-- **Features:** Extend functionality in `routes/posts.js`
-- **UI:** Customize Bootstrap classes in the EJS templates
+- Modify CSS variables in `public/css/styles.css` for theming
+- Add new categories in the form dropdowns in `views/index.ejs`
+- Extend functionality in `routes/posts.js` and `routes/auth.js`
+- Customize UI in the EJS templates
 
 ## Development Notes
-
-- CSS has been optimized to remove unused styles
-- Edit functionality moved from separate page to modal
-- Bootstrap classes used extensively for responsive design
-- Print styles included for better printing experience
+- All data is stored in PostgreSQL
+- Authentication and account management are fully database-driven
+- Only post owners can edit or delete their posts
+- Bootstrap and custom CSS provide a modern, responsive UI
 
 ## License
 MIT
 
 ---
 
-*CS-312 MiniProject 1 for educational purposes.* 
+*CS-312 MiniProject 3 for educational purposes.* 

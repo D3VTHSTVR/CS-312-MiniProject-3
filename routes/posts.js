@@ -1,26 +1,20 @@
 /*
   dependencies:
   - express: web framework for node.js
-  - sillyname: random name generator
 */
 const express = require('express');
 const router = express.Router();
-const sillyname = require('sillyname');
+const db = require('../db'); // Adjust path if needed
 
 /*
-  data storage:
-  - temporary in-memory array to store blog posts
-  - each post is an object with id, author, title, content, and timestamps
+  authentication middleware:
+  - checks if user is authenticated before allowing access to protected routes
 */
-let posts = [];
-
-/*
-  helper functions:
-  - generates a unique id for new posts using timestamp and random number
-*/
-const generateId = () =>
-{
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+const requireAuth = (req, res, next) => {
+    if (!req.session.user) {
+        return res.redirect('/auth/signin');
+    }
+    next();
 };
 
 /*
@@ -28,173 +22,103 @@ const generateId = () =>
   - get all posts: renders the index view with all posts (sorted newest first)
   - create new post: handles post creation form submission, generates id and timestamps
   - update post: handles post update form submission, updates content and timestamp
-  - delete post: handles post deletion request, removes post from array
-  - random name generator: returns a random silly name as json
+  - delete post: handles post deletion request, removes post from the database
 */
 
 /*
   get all posts route
   renders the main index page with all posts sorted by creation date
 */
-router.get('/', (req, res) =>
+router.get('/', requireAuth, async (req, res) =>
 {
-    /*
-      sort posts by creation timestamp in descending order (newest first)
-      creates a copy of the array to avoid mutating the original
-    */
-    const sortedPosts = [...posts].sort((a, b) => b.createdAtTimestamp - a.createdAtTimestamp);
-    res.render('index', { posts: sortedPosts });
+    try {
+        const { category } = req.query;
+        let query = 'SELECT * FROM blogs';
+        const params = [];
+
+        if (category) {
+            query += ' WHERE LOWER(category) = LOWER($1)';
+            params.push(category);
+        }
+
+        query += ' ORDER BY date_created DESC';
+
+        const result = await db.query(query, params);
+        
+        res.render('index', { 
+            posts: result.rows, 
+            user: req.session.user,
+            selectedCategory: category || '' 
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
 
 /*
   create new post route
   handles form submission for creating a new blog post
 */
-router.post('/', (req, res) =>
+router.post('/', requireAuth, async (req, res) =>
 {
-    /*
-      extract form data from request body
-      destructure author, title, content, and category fields
-    */
-    const { author, title, content, category } = req.body;
-    console.log('form data:', req.body);
-    
-    /*
-      create new post object with generated id and formatted timestamps
-      includes all form fields plus metadata
-    */
-    const newPost =
-    {
-        id: generateId(),
-        author,
-        title,
-        content,
-        category,
-        /*
-          format creation date for display
-          uses us locale with full month name and 12-hour time
-        */
-        createdAt: new Date().toLocaleString('en-US',
-        {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }),
-        /*
-          store raw timestamp for sorting purposes
-          used to maintain chronological order
-        */
-        createdAtTimestamp: Date.now()
-    };
-    
-    /*
-      add new post to the posts array
-      redirect to home page to show the new post
-    */
-    posts.push(newPost);
-    res.redirect('/');
+    try {
+        const { title, content, category } = req.body;
+        await db.query(
+            'INSERT INTO blogs (creator_user_id, creator_name, title, body, category, date_created) VALUES ($1, $2, $3, $4, $5, NOW())',
+            [req.session.user.user_id, req.session.user.name, title, content, category]
+        );
+        res.redirect('/posts');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
 
 /*
   update post route
   handles form submission for updating an existing post
 */
-router.put('/:id', (req, res) =>
+router.put('/:id', requireAuth, async (req, res) =>
 {
-    /*
-      extract updated form data from request body
-      destructure author, title, and content fields
-    */
-    const { author, title, content } = req.body;
-    /*
-      find the index of the post to update
-      returns -1 if no post is found with the given id
-    */
-    const postIndex = posts.findIndex(p => p.id === req.params.id);
-    
-    /*
-      if post exists (index is not -1), update it with new data
-      preserves existing fields and adds updated timestamp
-    */
-    if (postIndex !== -1)
-    {
-        /*
-          update the post at the found index
-          spread operator preserves existing fields
-          adds updated timestamp for tracking changes
-        */
-        posts[postIndex] =
-        {
-            ...posts[postIndex],
-            author,
-            title,
-            content,
-            /*
-              format update date for display
-              uses same format as creation date
-            */
-            updatedAt: new Date().toLocaleString('en-US',
-            {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        };
+    try {
+        const { title, content, category } = req.body;
+        const postId = req.params.id;
+        // Check ownership
+        const postResult = await db.query('SELECT * FROM blogs WHERE blog_id = $1', [postId]);
+        const post = postResult.rows[0];
+        if (!post) return res.status(404).send('Post not found');
+        if (post.creator_user_id !== req.session.user.user_id) return res.status(403).send('You can only edit your own posts');
+        // Update in DB
+        await db.query(
+            'UPDATE blogs SET title = $1, body = $2, category = $3 WHERE blog_id = $4',
+            [title, content, category, postId]
+        );
+        res.redirect('/posts');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
     }
-    
-    /*
-      redirect to home page to show the updated post
-      regardless of whether update was successful
-    */
-    res.redirect('/');
 });
 
 /*
   delete post route
   handles deletion request for a specific post by id
 */
-router.delete('/:id', (req, res) =>
+router.delete('/:id', requireAuth, async (req, res) =>
 {
-    /*
-      find the index of the post to delete
-      returns -1 if no post is found with the given id
-    */
-    const postIndex = posts.findIndex(p => p.id === req.params.id);
-    console.log('delete request for post:', req.params.id);
-    
-    /*
-      if post exists (index is not -1), remove it from the array
-      splice method removes one element at the specified index
-    */
-    if (postIndex !== -1)
-    {
-        posts.splice(postIndex, 1);
-        console.log('updated posts array:', posts);
+    try {
+        const postId = req.params.id;
+        const postResult = await db.query('SELECT * FROM blogs WHERE blog_id = $1', [postId]);
+        const post = postResult.rows[0];
+        if (!post) return res.status(404).send('Post not found');
+        if (post.creator_user_id !== req.session.user.user_id) return res.status(403).send('You can only delete your own posts');
+        await db.query('DELETE FROM blogs WHERE blog_id = $1', [postId]);
+        res.redirect('/posts');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
     }
-    
-    /*
-      redirect to home page to show the updated post list
-      regardless of whether deletion was successful
-    */
-    res.redirect('/');
-});
-
-/*
-  random name generator route
-  returns a random silly name as json for the frontend
-*/
-router.get('/generate-name', (req, res) =>
-{
-    /*
-      generate a random silly name using the sillyname library
-      returns it as json response for ajax requests
-    */
-    const randomName = sillyname();
-    res.json({ name: randomName });
 });
 
 /*

@@ -1,0 +1,154 @@
+<!-- javascript utility function for escaping strings in javascript context -->
+<% function escapeJS(str) { return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r'); } %>
+<!-- signup page - user registration form -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- meta tags - sets character encoding and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- page title - displays the signup page title -->
+    <title>Sign Up - BlogParty</title>
+    
+    <!-- bootstrap css - bootstrap icons - custom styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="text-light">
+    <!-- main content container with centered layout -->
+    <div class="container-fluid py-4">
+        <!-- responsive grid layout with centered content -->
+        <div class="row justify-content-center">
+            <!-- signup form container -->
+            <div class="col-md-6 col-lg-4">
+                <!-- signup card with green theme -->
+                <div class="card shadow border border-success bg-secondary bg-opacity-75">
+                    <!-- card header with green background -->
+                    <div class="card-header bg-success text-white text-center">
+                        <!-- card title with user plus icon -->
+                        <h3 class="h4 mb-0">
+                            <!-- person plus icon for signup -->
+                            <i class="bi bi-person-plus me-2"></i>
+                            <!-- signup title text -->
+                            Create Account
+                        </h3>
+                    </div>
+                    <!-- card body containing the form -->
+                    <div class="card-body">
+                        <!-- error message display -->
+                        <% if (error) { %>
+                            <!-- alert container for error messages -->
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <!-- exclamation triangle icon for error -->
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <!-- error message text -->
+                                <%= error %>
+                                <!-- dismiss button for alert -->
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <% } %>
+                        
+                        <!-- user registration form -->
+                        <form action="/auth/signup" method="POST">
+                            <!-- user id input group -->
+                            <div class="mb-3">
+                                <!-- user id label -->
+                                <label for="user_id" class="form-label text-light">
+                                    <!-- person icon for user id -->
+                                    <i class="bi bi-person me-1"></i>
+                                    User ID
+                                </label>
+                                <!-- user id text input -->
+                                <input type="text" 
+                                       class="form-control bg-dark text-light border-secondary" 
+                                       id="user_id" 
+                                       name="user_id" 
+                                       required 
+                                       placeholder="Enter your user ID">
+                                <!-- help text for user id -->
+                                <div class="form-text text-light">
+                                    Choose a unique username for your account
+                                </div>
+                            </div>
+                            
+                            <!-- password input group -->
+                            <div class="mb-3">
+                                <!-- password label -->
+                                <label for="password" class="form-label text-light">
+                                    <!-- lock icon for password -->
+                                    <i class="bi bi-lock me-1"></i>
+                                    Password
+                                </label>
+                                <!-- password input -->
+                                <input type="password" 
+                                       class="form-control bg-dark text-light border-secondary" 
+                                       id="password" 
+                                       name="password" 
+                                       required 
+                                       placeholder="Enter your password">
+                                <!-- help text for password -->
+                                <div class="form-text text-light">
+                                    Choose a secure password
+                                </div>
+                            </div>
+                            
+                            <!-- full name input group -->
+                            <div class="mb-3">
+                                <!-- name label -->
+                                <label for="name" class="form-label text-light">
+                                    <!-- person badge icon for name -->
+                                    <i class="bi bi-person-badge me-1"></i>
+                                    Full Name
+                                </label>
+                                <!-- name text input -->
+                                <input type="text" 
+                                       class="form-control bg-dark text-light border-secondary" 
+                                       id="name" 
+                                       name="name" 
+                                       required 
+                                       placeholder="Enter your full name">
+                                <!-- help text for name -->
+                                <div class="form-text text-light">
+                                    This will be displayed on your blog posts
+                                </div>
+                            </div>
+                            
+                            <!-- form submit button container -->
+                            <div class="d-grid gap-2">
+                                <!-- create account submit button -->
+                                <button type="submit" class="btn btn-success">
+                                    <!-- person plus icon for signup -->
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    <!-- create account button text -->
+                                    Create Account
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- signin link section -->
+                        <div class="text-center mt-3">
+                            <!-- horizontal divider -->
+                            <hr class="border-secondary">
+                            <!-- signin link text -->
+                            <p class="text-light mb-0">
+                                Already have an account? 
+                                <!-- signin link -->
+                                <a href="/auth/signin" class="text-success text-decoration-none">
+                                    <!-- signin icon -->
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>
+                                    Sign In
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- bootstrap javascript bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
